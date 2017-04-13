@@ -6,7 +6,7 @@
     android:id="@+id/listOfThings"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:spanCount="4"
+    app:spanCount="7"
     app:layoutManager="android.support.v7.widget.GridLayoutManager"
     tools:listitem="@layout/thing_item"
     tools:context="se.hellsoft.diffutilandrxjava.MainActivity"/>

@@ -15,7 +15,7 @@
         android:padding="8dp"
         android:layout_gravity="center"
         android:gravity="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         tools:text="ABC"/>
 
 </LinearLayout>

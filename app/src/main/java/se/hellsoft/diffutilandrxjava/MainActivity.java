@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
 
 import static io.reactivex.android.schedulers.AndroidSchedulers.mainThread;
@@ -40,19 +39,17 @@ public class MainActivity extends AppCompatActivity {
     recyclerView.setItemAnimator(new DefaultItemAnimator());
     recyclerView.setAdapter(adapter);
 
-    Flowable<List<Thing>> sharedThingsFlowable = ThingRepository
+    List<Thing> emptyList = new ArrayList<>();
+    adapter.setThings(emptyList);
+    Pair<List<Thing>, DiffUtil.DiffResult> initialPair = Pair.create(emptyList, null);
+    disposable = ThingRepository
         .latestThings(2, TimeUnit.SECONDS)
-        .onBackpressureBuffer()
-        .share();
-
-    Flowable<List<Thing>> startsWithEmptyList = sharedThingsFlowable.startWith(new ArrayList<Thing>());
-
-    disposable = Flowable
-        .zip(startsWithEmptyList, sharedThingsFlowable, (current, next) -> {
-          MyDiffCallback diffCallback = new MyDiffCallback(current, next);
-          DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback, true);
-          return Pair.create(next, diffResult);
+        .scan(initialPair, (pair, next) -> {
+          MyDiffCallback callback = new MyDiffCallback(pair.first, next);
+          DiffUtil.DiffResult result = DiffUtil.calculateDiff(callback);
+          return Pair.create(next, result);
         })
+        .skip(1)
         .subscribeOn(computation())
         .observeOn(mainThread())
         .subscribe(listDiffResultPair -> {

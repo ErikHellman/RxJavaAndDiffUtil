@@ -9,7 +9,7 @@ import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
 
 public class ThingRepository {
-  private static final int COUNT = 50;
+  private static final int COUNT = 100;
 
   private static Random random = new Random();
 
