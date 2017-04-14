@@ -24,9 +24,7 @@ public class ThingRepository {
   private static List<Thing> randomThings() {
     List<Thing> things = new ArrayList<>(COUNT);
     for (int i = 0; i < COUNT; i++) {
-      Thing thing = newThing();
-      thing.setId(i);
-      things.add(thing);
+      things.add(newThing(i));
     }
     return things;
   }
@@ -40,17 +38,16 @@ public class ThingRepository {
     return shuffled;
   }
 
-  private static Thing newThing() {
-    Thing thing = new Thing();
+  private static Thing newThing(int id) {
+    Thing.Builder builder = Thing.builder();
 
+    builder.id(id);
     char first = (char) (random.nextInt(25) + 65);
     char second = (char) (random.nextInt(25) + 65);
     char third = (char) (random.nextInt(25) + 65);
-    thing.setText(String.valueOf(new char[]{first, second, third}));
+    builder.text(String.valueOf(new char[]{first, second, third}));
+    builder.color(random.nextInt());
 
-    int color = random.nextInt();
-    thing.setColor(color);
-
-    return thing;
+    return builder.build();
   }
 }

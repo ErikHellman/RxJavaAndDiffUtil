@@ -6,16 +6,14 @@ import android.support.annotation.ColorInt;
 
 public class Thing implements Parcelable {
   private int id;
-
   private String text;
-
   @ColorInt
   private int color;
 
-  public Thing() {
+  private Thing() {
   }
 
-  public Thing(int  id, String text, int color) {
+  private Thing(int id, String text, int color) {
     this.id = id;
     this.text = text;
     this.color = color;
@@ -27,16 +25,8 @@ public class Thing implements Parcelable {
     color = in.readInt();
   }
 
-  @Override
-  public void writeToParcel(Parcel dest, int flags) {
-    dest.writeInt(id);
-    dest.writeString(text);
-    dest.writeInt(color);
-  }
-
-  @Override
-  public int describeContents() {
-    return 0;
+  public static Builder builder() {
+    return new Builder();
   }
 
   public static final Creator<Thing> CREATOR = new Creator<Thing>() {
@@ -51,29 +41,29 @@ public class Thing implements Parcelable {
     }
   };
 
-  public int getId() {
-    return id;
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeInt(id);
+    dest.writeString(text);
+    dest.writeInt(color);
   }
 
-  public void setId(int id) {
-    this.id = id;
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  public int getId() {
+    return id;
   }
 
   public String getText() {
     return text;
   }
 
-  public void setText(String text) {
-    this.text = text;
-  }
-
   @ColorInt
   public int getColor() {
     return color;
-  }
-
-  public void setColor(@ColorInt int color) {
-    this.color = color;
   }
 
   @Override
@@ -95,5 +85,33 @@ public class Thing implements Parcelable {
     result = 31 * result + (text != null ? text.hashCode() : 0);
     result = 31 * result + color;
     return result;
+  }
+
+  public static class Builder {
+    private int id;
+    private String text;
+    private int color;
+
+    private Builder() {
+    }
+
+    public Builder id(int id) {
+      this.id = id;
+      return this;
+    }
+
+    public Builder text(String text) {
+      this.text = text;
+      return this;
+    }
+
+    public Builder color(@ColorInt int color) {
+      this.color = color;
+      return this;
+    }
+
+    public Thing build() {
+      return new Thing(id, text, color);
+    }
   }
 }
